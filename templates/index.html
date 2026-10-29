@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Attendance &amp; Engagement Agent</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 32 32" width="30" height="30"><circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 19c3-7 7-9 10-9s7 2 10 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="19" r="2.6" fill="currentColor"/></svg>
+    </div>
+    <div>
+      <h1>Attendance &amp; Engagement Agent</h1>
+      <p class="sub">Multimodal classroom intelligence: vision + audio + reasoning</p>
+    </div>
+  </div>
+  <div class="badges">
+    <span class="badge ok" title="No cloud calls. Frames and audio are never written to disk.">Offline &middot; privacy-preserving</span>
+    <span class="badge" id="detectorBadge">detector: checking&hellip;</span>
+  </div>
+</header>
+
+<main>
+  <section class="panel controls" aria-label="Session controls">
+    <div class="ctl-group">
+      <h2>Start a session</h2>
+      <div class="ctl-row">
+        <input id="sessName" type="text" value="Demo class" aria-label="Session name">
+        <button id="btnSim" class="primary">Run demo (simulated class)</button>
+        <button id="btnLive">Live camera</button>
+        <button id="btnUploadToggle">Analyse recording</button>
+        <button id="btnStop" class="danger" disabled>Stop &amp; save</button>
+      </div>
+      <form id="uploadForm" class="ctl-row hidden">
+        <label class="file">Video <input type="file" name="video" accept="video/*" required></label>
+        <label class="file">Audio (.wav, optional) <input type="file" name="audio" accept=".wav,audio/wav"></label>
+        <button type="submit" class="primary">Analyse</button>
+      </form>
+    </div>
+    <div class="statusbar" aria-live="polite">
+      <span id="statusText">Idle. Run the demo to see the full pipeline without a camera.</span>
+      <div class="progress"><div id="progressBar"></div></div>
+    </div>
+  </section>
+
+  <section class="kpis" id="kpis">
+    <div class="kpi"><span class="lbl">Present now</span><span class="val" id="kPresent">&ndash;</span></div>
+    <div class="kpi"><span class="lbl">Attendees logged</span><span class="val" id="kAttendees">&ndash;</span></div>
+    <div class="kpi"><span class="lbl">Avg engagement</span><span class="val" id="kEng">&ndash;</span></div>
+    <div class="kpi"><span class="lbl">Trend</span><span class="val" id="kTrend">&ndash;</span></div>
+    <div class="kpi" title="Faces seen briefly that never reached sustained presence"><span class="lbl">False detections filtered</span><span class="val" id="kFiltered">&ndash;</span></div>
+    <div class="kpi"><span class="lbl">Elapsed</span><span class="val" id="kElapsed">&ndash;</span></div>
+  </section>
+
+  <div class="grid">
+    <section class="panel wide">
+      <h2>Engagement over time</h2>
+      <div id="chart" class="chart" role="img" aria-label="Class engagement score per 30 second window"></div>
+      <div class="legend" id="chartLegend"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Teaching suggestions <span class="hint">assistive, never enforced</span></h2>
+      <div id="coachNote" class="coach hidden"></div>
+      <ul id="suggestions" class="sugg"></ul>
+    </section>
+
+    <section class="panel wide">
+      <h2>Attendance</h2>
+      <div class="table-wrap">
+        <table id="attTable">
+          <thead><tr><th>Participant</th><th>Status</th><th>Check-in</th><th>Presence</th><th>Engagement</th><th>Attention</th><th>Still (s)</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Event log</h2>
+      <ul id="events" class="events"></ul>
+    </section>
+
+    <section class="panel wide">
+      <h2>Participant engagement heatmap <span class="hint">each column = one window</span></h2>
+      <div id="heat" class="heat"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Saved sessions</h2>
+      <ul id="saved" class="saved"></ul>
+    </section>
+  </div>
+</main>
+
+<footer>All analysis runs on this computer. Only derived metrics are stored in <code>data/attendance.db</code>; no video frames, audio or face images are kept.</footer>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+flask>=3.0
+numpy>=1.26
+opencv-python>=4.8        # use opencv-python-headless on servers without a display
+
+# Optional: live microphone input (needs the PortAudio system library)
+# sounddevice>=0.4
+
+# Testing
+pytest>=8.0
